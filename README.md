@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Garage GraphQL Maintenance
 
-## Getting Started
+A small Next.js app for tracking a garage of vehicles and their maintenance history. It ships its own GraphQL API (via `graphql-yoga`) and a UI that queries it to render each vehicle's latest mileage and last service date.
 
-First, run the development server:
+## Tech stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [Next.js 16](https://nextjs.org/) (App Router) + React 19
+- [GraphQL Yoga](https://the-guild.dev/graphql/yoga-server) for the API, mounted as a Next.js route handler
+- Tailwind CSS v4
+- shadcn/ui components (`components/ui/*`) built on Base UI
+
+## Project structure
+
+```
+app/
+  api/graphql/route.ts   GraphQL schema, resolvers, and Yoga route handler
+  vehicles/page.tsx      Fetches vehicles from the GraphQL API and renders them
+  page.tsx               Default Next.js landing page
+lib/
+  data.ts                In-memory vehicle and maintenance record data
+components/ui/           shadcn/ui primitives (badge, button, card, table)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Getting started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Install dependencies (the repo uses pnpm, indicated by `pnpm-lock.yaml`):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm install
+```
 
-## Learn More
+Copy the environment example and fill in the values:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable            | Description                                                        |
+| ------------------- | -------------------------------------------------------------------|
+| `BASE_API_URL`      | Base URL the app fetches against (e.g. `http://localhost:3000`)    |
+| `GRAPH_QL_ENDPOINT` | Path to the GraphQL endpoint (e.g. `/api/graphql`)                 |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Run the dev server:
 
-## Deploy on Vercel
+```bash
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- App: [http://localhost:3000](http://localhost:3000)
+- Vehicles page: [http://localhost:3000/vehicles](http://localhost:3000/vehicles)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## GraphQL API
+
+The schema is defined in [app/api/graphql/route.ts](app/api/graphql/route.ts):
+
+Data is currently served from the in-memory fixtures in [lib/data.ts](lib/data.ts) rather than a database.
+
