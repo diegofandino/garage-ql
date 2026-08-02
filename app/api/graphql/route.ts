@@ -19,6 +19,7 @@ const typeDefs = `
     type MaintenanceRecord {
         id: ID!,
         vehicleId: ID!,
+        vehicle: Vehicle!,
         type: String!,
         date: String!,
         mileage: Int!,
@@ -32,7 +33,7 @@ const typeDefs = `
     
     type Mutation {
         createVehicle( nickname: String!, make: String!, model: String!, year: Int!, plate: String!): Vehicle!
-        createMaintenance( vehicleId: ID!, type: String!, date: String!, mileage: Int!, notes: String!): MaintenanceRecord!
+        createMaintenance( vehicleId: ID!, type: String!, date: String!, mileage: Int!, notes: String): MaintenanceRecord!
     }
 `;
 
@@ -94,6 +95,9 @@ const resolvers = {
     },
     Vehicle: {
         records: (parent: { id: string }) => maintenanceRecords.filter(record => record.vehicleId === parent.id)
+    },
+    MaintenanceRecord: {
+        vehicle: (parent: { vehicleId: string }) => vehicles.find(vehicle => vehicle.id === parent.vehicleId)
     }
 };
 

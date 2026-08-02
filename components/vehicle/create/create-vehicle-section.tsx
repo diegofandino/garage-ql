@@ -1,14 +1,14 @@
 'use client'
-import { createVehicle, type CreateVehicleMessage } from '@/app/actions';
+import { createVehicle, type CreateGeneralMessage } from '@/app/actions';
 import { showToast } from '@/app/helpers/show-toastr/show-toastr';
 import { FieldError } from '@/components/shared/errors-inputs/errors-inputs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@base-ui/react';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
-const initialValue: CreateVehicleMessage = {
+const initialValue: CreateGeneralMessage = {
     success: false,
     message: ''
 }
@@ -16,6 +16,16 @@ const initialValue: CreateVehicleMessage = {
 export default function CreateVehicleSection() {
 
     const [state, formAction, isPending] = useActionState(createVehicle, initialValue);
+
+    const [dirtyFields, setDirtyFields] = useState<Set<string>>(new Set());
+    const markDirty = (field: string) =>
+        setDirtyFields((prev) => new Set(prev).add(field));
+    const errorFor = (field: string) =>
+        dirtyFields.has(field) ? undefined : state.errors?.[field];
+
+    useEffect(() => {
+        setDirtyFields(new Set());
+    }, [state]);
 
     useEffect(() => {
         if (state.success === false && state.errors) {
@@ -35,7 +45,7 @@ export default function CreateVehicleSection() {
         }
     }, [state]);
 
-    return (<div className="mx-auto max-w-5xl grid grid-cols-1 gap-8 py-16 md:grid-cols-[1fr_1.4fr]">
+    return (<div className="mx-auto max-w-5xl grid grid-cols-1 gap-15 py-16 md:grid-cols-[1fr_1.5fr]">
         <div>
             <h1 className="text-2xl font-semibold">Add a vehicle</h1>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -51,8 +61,8 @@ export default function CreateVehicleSection() {
                         <Label htmlFor="nickname" className="mb-2 block">
                             Nickname
                         </Label>
-                        <Input id="nickname" name="nickname" placeholder="e.g. The Beast" />
-                        <FieldError errors={state.errors?.nickname} />
+                        <Input id="nickname" name="nickname" placeholder="e.g. The Beast" onChange={() => markDirty('nickname')} />
+                        <FieldError errors={errorFor('nickname')} />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -60,15 +70,15 @@ export default function CreateVehicleSection() {
                             <Label htmlFor="make" className="mb-2 block">
                                 Make
                             </Label>
-                            <Input id="make" name="make" placeholder="e.g. Subaru" />
-                            <FieldError errors={state.errors?.make} />
+                            <Input id="make" name="make" placeholder="e.g. Subaru" onChange={() => markDirty('make')} />
+                            <FieldError errors={errorFor('make')} />
                         </div>
                         <div>
                             <Label htmlFor="model" className="mb-2 block">
                                 Model
                             </Label>
-                            <Input id="model" name="model" placeholder="e.g. Outback" />
-                            <FieldError errors={state.errors?.model} />
+                            <Input id="model" name="model" placeholder="e.g. Outback" onChange={() => markDirty('model')} />
+                            <FieldError errors={errorFor('model')} />
                         </div>
                     </div>
 
@@ -77,15 +87,15 @@ export default function CreateVehicleSection() {
                             <Label htmlFor="year" className="mb-2 block">
                                 Year
                             </Label>
-                            <Input id="year" name="year" type="number" placeholder="2022" />
-                            <FieldError errors={state.errors?.year} />
+                            <Input id="year" name="year" type="number" placeholder="2022" onChange={() => markDirty('year')} />
+                            <FieldError errors={errorFor('year')} />
                         </div>
                         <div>
                             <Label htmlFor="plate" className="mb-2 block">
                                 License plate
                             </Label>
-                            <Input style={{ textTransform: "uppercase" }} id="plate" name="plate" placeholder="ABC 1234" />
-                            <FieldError errors={state.errors?.plate} />
+                            <Input style={{ textTransform: "uppercase" }} id="plate" name="plate" placeholder="ABC 1234" onChange={() => markDirty('plate')} />
+                            <FieldError errors={errorFor('plate')} />
                         </div>
                     </div>
 

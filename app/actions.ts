@@ -1,8 +1,8 @@
 'use server';
 import { updateTag } from "next/cache";
-import z from "zod";
+import z, { date } from "zod";
 
-export interface CreateVehicleMessage {
+export interface CreateGeneralMessage {
     success: boolean;
     message: string;
     errors?: Record<string, string[]>;
@@ -14,9 +14,19 @@ const CreateVehicleSchema = z.object({
     model: z.string().min(1).max(100),
     year: z.string().regex(/^\d{4}$/, { message: 'Only year.' }),
     plate: z.string().toUpperCase().regex(/^[A-Z]{3}[0-9]{3}$/, { message: 'Plate should be: ABC123' })
-})
+});
 
-export async function createVehicle(_prevState: CreateVehicleMessage, formData: FormData): Promise<CreateVehicleMessage> {
+const MaintenanceEnum = z.enum(["Oil Change", "Tire Rotation", "Brake Pads", "Battery", "Other"]);
+
+const CreateLogMaintenanceForVehicle = z.object({
+    vehicleId: z.string().min(1),
+    type: MaintenanceEnum,
+    date: z.string(),
+    mileage: z.coerce.number().int().min(1),
+    notes: z.string().optional()
+});
+
+export async function createVehicle(_prevState: CreateGeneralMessage, formData: FormData): Promise<CreateGeneralMessage> {
     const raw = Object.fromEntries(formData);
     const result = CreateVehicleSchema.safeParse(raw);
 
@@ -57,4 +67,57 @@ export async function createVehicle(_prevState: CreateVehicleMessage, formData: 
 
     updateTag('get-cars');
     return { success: true, message: 'Vehicle saved.' };
+}
+
+export async function createLogMaintanceById(_prevState: CreateGeneralMessage, formData: FormData): Promise<CreateGeneralMessage> {
+    const rawData = Object.fromEntries(formData);
+    const result = CreateLogMaintenanceForVehicle.safeParse(rawData);
+
+    if (!result.success) {
+        return {
+            success: false,
+            message: 'Please fix the errors below.',
+            errors: z.flattenError(result.error).fieldErrors as Record<string, string[]>,
+        }
+    }
+
+    const objectToSend = {
+        vehicleId: result.data.vehicleId,
+        type: result.data.type,
+        date: Number(result.data.date),
+        mileage: result.data.mileage,
+        notes: result.data.notes
+    };
+
+    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            query: `
+            mutation createMaintenanceLog($vehicleId: ID!, $type: String!, $date: String!, $mileage: Int!, $notes: String){
+                createMaintenance(vehicleId: $vehicleId, type: $type, date: $date, mileage: $mileage, notes: $notes ){
+                    id
+                    vehicle {
+                        nickname
+                    }
+                }
+            }
+            `,
+            variables: objectToSend
+        })
+    });
+
+    if (!response.ok) {
+        return { success: false, message: 'Something went wrong saving the vehicle maintenance log' };
+    }
+
+    const { data, errors } = await response.json();
+
+    if (errors) {
+        return { success: false, message: 'Something went wrong saving the vehicle maintenance.' };
+    }
+
+    updateTag('get-cars');
+    return { success: true, message: `Maintenance logged for ${data.createMaintenance.vehicle.nickname}` };
+
 }

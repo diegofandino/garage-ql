@@ -28,8 +28,8 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.className} h-full antialiased dark`}
     >
-      <body className="flex min-h-full flex-col bg-[#080604] text-stone-100">
-        <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-1 flex-col border-x border-white/15">
+      <body className="flex min-h-full min-h-screen w-full text-stone-100">
+        <div className="mx-auto flex flex-1 flex-col border-x border-white/15">
           <SiteHeader />
           <main className="flex-1">
             <Toaster>{children}</Toaster>
