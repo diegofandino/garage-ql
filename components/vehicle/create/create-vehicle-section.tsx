@@ -35,7 +35,7 @@ export default function CreateVehicleSection() {
         }
     }, [state]);
 
-    return (<div className="mx-auto grid grid-cols-1 gap-8 py-16 md:grid-cols-[1fr_1.4fr]">
+    return (<div className="mx-auto max-w-5xl grid grid-cols-1 gap-8 py-16 md:grid-cols-[1fr_1.4fr]">
         <div>
             <h1 className="text-2xl font-semibold">Add a vehicle</h1>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -93,7 +93,7 @@ export default function CreateVehicleSection() {
                         <Button
                             type="submit"
                             disabled={isPending}
-                            className="bg-orange-500 px-4 py-2 rounded-sm text-white hover:bg-orange-600"
+                            className="bg-orange-500 px-4 py-2 rounded-sm text-white hover:bg-orange-600 cursor-pointer"
                         >
                             {isPending ? 'Saving…' : 'Save vehicle'}
                         </Button>

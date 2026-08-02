@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { Toaster } from "@/components/ui/toast";
+import SiteFooter from "@/components/layout/site-footer";
+import SiteHeader from "@/components/layout/site-header";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -26,8 +28,14 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.className} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col container mx-auto text-white-800">
-        <Toaster>{children}</Toaster>
+      <body className="flex min-h-full flex-col bg-[#080604] text-stone-100">
+        <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-1 flex-col border-x border-white/15">
+          <SiteHeader />
+          <main className="flex-1">
+            <Toaster>{children}</Toaster>
+          </main>
+          <SiteFooter />
+        </div>
       </body>
     </html>
   );

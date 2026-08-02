@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import CreateVehicleSection from "@/components/vehicle/create/create-vehicle-section";
+import CreateMaintenanceSection from "@/components/maintenance/create/create-maintenance-section";
 import type { Vehicle as BaseVehicle } from '@/lib/data'
 
 export type Vehicle = BaseVehicle & {
@@ -64,7 +65,7 @@ const CardVehicleComponent = ({ nickname, make, model, year, plate, records }: P
             Your mileage: {latestRecord?.mileage || 'No mileage'}
           </CardDescription>
         </div>
-        <div className="font-bold px-4 py-2 bg-yellow-300 rounded-sm text-gray-800 tracking-wide">
+        <div className="font-bold px-4 py-2 bg-orange-500 text-white rounded-sm text-gray-800 tracking-wide">
           {plate}
         </div>
       </CardHeader>
@@ -82,22 +83,29 @@ export default async function VehicleTable() {
   const vehicles: Vehicle[] = await getVehicles();
 
   return (
-    <div>
-      <section className="py-5">
-        <h2 className="text-xl font-bold">Your Garage</h2>
-        <p> Every vehicle keeps its own maintanance history below </p>
-        <div className="my-4 flex flex-row gap-10 flex-wrap">
-          {
-            vehicles.map(
-              vehicle => (
-                <CardVehicleComponent key={vehicle.id} records={vehicle.records} model={vehicle.model} nickname={vehicle.nickname} make={vehicle.make} year={vehicle.year} plate={vehicle.plate} />
+    <div className="w-full">
+      <section id="vehicles" className="w-full border-y border-border bg-muted/40 px-6 py-20">
+        <div className="mx-auto max-w-5xl">
+          <h2 className="text-xl font-bold">Your Garage</h2>
+          <p> Every vehicle keeps its own maintanance history below </p>
+          <div className="my-4 flex flex-row flex-wrap gap-10">
+            {
+              vehicles && vehicles.length > 0 ? vehicles.map(
+                vehicle => (
+                  <CardVehicleComponent key={vehicle.id} records={vehicle.records} model={vehicle.model} nickname={vehicle.nickname} make={vehicle.make} year={vehicle.year} plate={vehicle.plate} />
+                )
+              ) : (
+                <h3 className="text-center mx-auto w-full text-4xl py-10"> There are not vehicles in your garage. </h3>
               )
-            )
-          }
+            }
+          </div>
         </div>
       </section>
-      <section>
+      <section id="add-vehicle" className="w-full border-b border-border bg-card px-6 py-20">
         <CreateVehicleSection />
+      </section>
+      <section id="maintenance" className="w-full border-y border-slate-700 bg-slate-950 px-6 py-20">
+        <CreateMaintenanceSection vehicles={vehicles} />
       </section>
     </div>
   );
