@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -25,7 +26,9 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.className} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col container mx-auto text-white-800">{children}</body>
+      <body className="min-h-full flex flex-col container mx-auto text-white-800">
+        <Toaster>{children}</Toaster>
+      </body>
     </html>
   );
 }
