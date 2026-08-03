@@ -16,7 +16,7 @@ export type MaintenanceRecord = {
   notes?: string;
 };
 
-export let vehicles: Vehicle[] = [
+export const vehicles: Vehicle[] = [
   {
     id: '1',
     nickname: 'The Beast',
@@ -27,7 +27,7 @@ export let vehicles: Vehicle[] = [
   }
 ];
 
-export let maintenanceRecords: MaintenanceRecord[] = [
+export const maintenanceRecords: MaintenanceRecord[] = [
   {
     id: '1',
     vehicleId: '1',

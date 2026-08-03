@@ -59,7 +59,7 @@ export default async function VehicleTable() {
         <div className="mx-auto max-w-5xl">
           <h2 className="text-xl font-bold">Your Garage</h2>
           <p> Every vehicle keeps its own maintanance history below </p>
-          <div className="my-8 flex flex-row flex-wrap gap-5 lg:gap-10">
+          <div className="my-8 flex flex-row flex-wrap gap-5 lg:gap-10 max-h-[500px] overflow-y-auto">
             {
               vehicles && vehicles.length > 0 ? vehicles.map(
                 vehicle => (

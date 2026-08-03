@@ -136,4 +136,14 @@ const { handleRequest } = createYoga({
     graphiql: !isProduction && true
 });
 
-export { handleRequest as GET, handleRequest as POST, handleRequest as OPTIONS }
+export async function GET(request: Request): Promise<Response> {
+    return handleRequest(request, {});
+}
+
+export async function POST(request: Request): Promise<Response> {
+    return handleRequest(request, {});
+}
+
+export async function OPTIONS(request: Request): Promise<Response> {
+    return handleRequest(request, {});
+}

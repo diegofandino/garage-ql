@@ -24,10 +24,6 @@ export default function CreateVehicleSection() {
         dirtyFields.has(field) ? undefined : state.errors?.[field];
 
     useEffect(() => {
-        setDirtyFields(new Set());
-    }, [state]);
-
-    useEffect(() => {
         if (state.success === false && state.errors) {
             showToast({
                 title: 'Check fields',
@@ -56,7 +52,7 @@ export default function CreateVehicleSection() {
 
         <Card>
             <CardContent>
-                <form action={formAction} className="flex flex-col gap-5">
+                <form action={formAction} onSubmit={() => setDirtyFields(new Set())} className="flex flex-col gap-5">
                     <div>
                         <Label htmlFor="nickname" className="mb-2 block">
                             Nickname

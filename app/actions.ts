@@ -114,7 +114,7 @@ export async function createLogMaintanceById(_prevState: CreateGeneralMessage, f
     const { data, errors } = await response.json();
 
     if (errors) {
-        return { success: false, message: 'Something went wrong saving the vehicle maintenance.' };
+        return { success: false, message: errors[0].message };
     }
 
     updateTag('get-cars');
@@ -138,7 +138,7 @@ export async function deleteMaintenanceFromVehicle(_prevState: CreateGeneralMess
 
     if (!response.ok) return {
         success: false,
-        message: "Something went wrong deleting the car log maintenance, please try again."
+        message: "Something went wrong deleting the car log maintenance, please try again.",
     }
 
     const { data, errors } = await response.json();

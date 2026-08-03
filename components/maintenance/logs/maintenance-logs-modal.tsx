@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState, useTransition } from 'react';
+import { useActionState, useEffect, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -84,7 +84,7 @@ export default function MaintenanceLogsModal({ nickname, records }: MaintenanceL
                     You will find all maintenance logs here.
                 </DialogDescription>
 
-                <div className="mt-4 flex flex-col gap-3">
+                <div className="mt-4 flex flex-col gap-3 max-h-[500px] overflow-y-auto">
                     {records.length === 0 && (
                         <p className="text-sm text-muted-foreground">No logs yet.</p>
                     )}
@@ -93,7 +93,7 @@ export default function MaintenanceLogsModal({ nickname, records }: MaintenanceL
                         .map((record) => (
                             <div
                                 key={record.id}
-                                className="flex items-center justify-between gap-4 rounded-lg border border-border p-3"
+                                className="flex items-center justify-between gap-4 rounded-lg border border-border p-3 "
                             >
                                 <div className="min-w-0">
                                     <p className="font-medium">{record.type}</p>
@@ -116,7 +116,7 @@ export default function MaintenanceLogsModal({ nickname, records }: MaintenanceL
                                     <AlertDialogPopup>
                                         <AlertDialogTitle>Delete this log?</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            This removes the {record.type} record from {record.date}. This can't be undone.
+                                            This removes the {record.type} record from {record.date}. This can not be undone.
                                         </AlertDialogDescription>
                                         <div className="mt-5 flex justify-end gap-2">
                                             <AlertDialogClose render={<Button variant="outline" size="sm" />}>

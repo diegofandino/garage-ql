@@ -9,6 +9,15 @@ A small Next.js app for tracking a garage of vehicles and their maintenance hist
 - Tailwind CSS v4
 - shadcn/ui components (`components/ui/*`) built on Base UI
 
+## Architecture notes
+
+- Next.js App Router
+- GraphQL Yoga API route
+- Server Actions for form submissions
+- shadcn/ui and Base UI components
+- In-memory data for demo purposes
+- Planned next step: replace in-memory arrays with a persistent database
+
 ## Project structure
 
 ```
@@ -18,7 +27,8 @@ app/
   page.tsx               Default Next.js landing page
 lib/
   data.ts                In-memory vehicle and maintenance record data
-components/ui/           shadcn/ui primitives (badge, button, card, table)
+components               Layout, components for using inside pages.
+component/ui/           shadcn/ui primitives (badge, button, card, table)
 ```
 
 ## Getting started

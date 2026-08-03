@@ -33,14 +33,10 @@ export default function CreateMaintenanceSection({
 
 
   useEffect(() => {
-    setDirtyFields(new Set());
-  }, [state]);
-
-  useEffect(() => {
-    if (!state.success && state.errors) {
+    if (!state.success) {
       showToast({
-        title: 'Check fields',
-        description: 'Please, use the correct data',
+        title: 'Please check data',
+        description: state.message,
         type: 'error',
       });
     }
@@ -59,7 +55,7 @@ export default function CreateMaintenanceSection({
 
       <Card className="border border-border bg-card">
         <CardContent>
-          <form action={formAction} className="flex flex-col gap-5">
+          <form action={formAction} onSubmit={() => setDirtyFields(new Set())} className="flex flex-col gap-5">
             <div>
               <Label htmlFor="vehicle" className="mb-2 block">
                 Vehicle
