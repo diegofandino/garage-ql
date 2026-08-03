@@ -12,38 +12,45 @@ export type Vehicle = BaseVehicle & {
 export const dynamic = 'force-dynamic';
 
 async function getVehicles() {
-  const res = await fetch(getGraphQLUrl(), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `
-                {
-                    vehicles {
-                        id
-                        nickname
-                        make
-                        plate
-                        model
-                        year
-                        records {
-                            id
-                            type
-                            mileage
-                            date
-                            notes
-                        }
-                    } 
-                }           
-            `
-    }),
-    next: { tags: ['get-cars'] }
-  });
+  const query = `
+    {
+      vehicles {
+        id
+        nickname
+        make
+        plate
+        model
+        year
+        records {
+          id
+          type
+          mileage
+          date
+          notes
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(
+    `${getGraphQLUrl()}?query=${encodeURIComponent(query)}`,
+    {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      next: { tags: ['get-cars'] },
+    }
+  );
 
 
-  if (!res.ok) return [];
+  if (!res.ok) {
+    throw new Error(`GraphQL request failed with status ${res.status}`);
+  }
 
   const { data, errors } = await res.json();
-  if (errors) return [];
+  if (errors?.length) {
+    throw new Error(`GraphQL query failed: ${errors[0].message}`);
+  }
+
   return data.vehicles as Vehicle[];
 }
 
