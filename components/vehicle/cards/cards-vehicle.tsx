@@ -45,7 +45,7 @@ export const CardVehicleComponent = ({ id, nickname, make, model, year, plate, r
                         Your mileage: {latestRecord?.mileage || 'No mileage'}
                     </CardDescription>
                 </div>
-                <div className="font-bold px-4 py-2 bg-orange-500 text-white rounded-sm text-gray-800 tracking-wide">
+                <div className="relative font-bold px-4 py-2 bg-amber-300 text-black border-[2px] border-black rounded-sm text-gray-800">
                     {plate}
                 </div>
             </CardHeader>
