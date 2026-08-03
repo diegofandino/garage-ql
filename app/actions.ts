@@ -63,7 +63,7 @@ export async function createVehicle(_prevState: CreateGeneralMessage, formData: 
     })
 
     if (!response.ok) {
-        return { success: false, message: 'Something went wrong saving the vehicle.' };
+        return { success: false, message: `Something went wrong saving the vehicle (status ${response.status}).` };
     }
 
     updateTag('get-cars');

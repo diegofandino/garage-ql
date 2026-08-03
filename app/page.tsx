@@ -9,6 +9,8 @@ export type Vehicle = BaseVehicle & {
   records: { id: string, type: string, mileage: string, date: string, notes: string | null }[];
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getVehicles() {
   const res = await fetch(getGraphQLUrl(), {
     method: 'POST',
