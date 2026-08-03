@@ -1,16 +1,11 @@
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+
 import CreateVehicleSection from "@/components/vehicle/create/create-vehicle-section";
 import CreateMaintenanceSection from "@/components/maintenance/create/create-maintenance-section";
 import type { Vehicle as BaseVehicle } from '@/lib/data'
+import { CardVehicleComponent } from "@/components/vehicle/cards/cards-vehicle";
 
 export type Vehicle = BaseVehicle & {
-  records: { id: string, mileage: string, date: string }[];
+  records: { id: string, type: string, mileage: string, date: string, notes: string | null }[];
 };
 
 async function getVehicles() {
@@ -29,8 +24,10 @@ async function getVehicles() {
                         year
                         records {
                             id
+                            type
                             mileage
                             date
+                            notes
                         }
                     } 
                 }           
@@ -42,39 +39,9 @@ async function getVehicles() {
 
   if (!res.ok) return [];
 
-  const { data } = await res.json();
+  const { data, errors } = await res.json();
+  if (errors) return [];
   return data.vehicles as Vehicle[];
-}
-
-function getLatestRecord(records: Vehicle['records']) {
-  return records?.reduce((latest, record) =>
-    !latest || new Date(record.date) > new Date(latest.date) ? record : latest
-    , records[0]);
-}
-
-const CardVehicleComponent = ({ nickname, make, model, year, plate, records }: Pick<Vehicle, 'nickname' | 'make' | 'model' | 'year' | 'plate' | 'records'>) => {
-  const latestRecord = getLatestRecord(records);
-
-  return (
-
-    <Card className="w-full flex-shrink max-w-full min-h-auto md:max-w-[450px] md:min-h-[180px]">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle> {make} {model} {nickname} {year}</CardTitle>
-          <CardDescription>
-            Your mileage: {latestRecord?.mileage || 'No mileage'}
-          </CardDescription>
-        </div>
-        <div className="font-bold px-4 py-2 bg-orange-500 text-white rounded-sm text-gray-800 tracking-wide">
-          {plate}
-        </div>
-      </CardHeader>
-      <CardFooter className="flex-col gap-2 h-full justify-center">
-        Last maintanance: <b>{latestRecord?.date || 'No Maintainance date'}</b>
-      </CardFooter>
-    </Card>
-
-  )
 }
 
 
@@ -96,7 +63,7 @@ export default async function VehicleTable() {
             {
               vehicles && vehicles.length > 0 ? vehicles.map(
                 vehicle => (
-                  <CardVehicleComponent key={vehicle.id} records={vehicle.records} model={vehicle.model} nickname={vehicle.nickname} make={vehicle.make} year={vehicle.year} plate={vehicle.plate} />
+                  <CardVehicleComponent key={vehicle.id} id={vehicle.id} records={vehicle.records} model={vehicle.model} nickname={vehicle.nickname} make={vehicle.make} year={vehicle.year} plate={vehicle.plate} />
                 )
               ) : (
                 <h3 className="text-center mx-auto w-full text-4xl py-10"> There are not vehicles in your garage. </h3>

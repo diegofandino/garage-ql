@@ -34,6 +34,8 @@ const typeDefs = `
     type Mutation {
         createVehicle( nickname: String!, make: String!, model: String!, year: Int!, plate: String!): Vehicle!
         createMaintenance( vehicleId: ID!, type: String!, date: String!, mileage: Int!, notes: String): MaintenanceRecord!
+        deleteMaintenance(id: ID!): Boolean
+        deleteVehicle(id: ID!): Boolean
     }
 `;
 
@@ -91,6 +93,25 @@ const resolvers = {
             });
 
             return maintenanceRecords.find(maintenance => maintenance.id === newId.toString());
+        },
+        deleteMaintenance: (_parent: unknown, { id }: { id: string }) => {
+            const indexOfMaintenance = maintenanceRecords.findIndex(record => record.id === id);
+            if (indexOfMaintenance === -1) return false;
+            maintenanceRecords.splice(indexOfMaintenance, 1);
+            return true;
+        },
+        deleteVehicle: (_parent: unknown, { id }: { id: string }) => {
+            const vehicleIndex = vehicles.findIndex(vehicle => vehicle.id === id);
+            if (vehicleIndex === -1) return false;
+            vehicles.splice(vehicleIndex, 1);
+
+            for (let i = maintenanceRecords.length - 1; i >= 0; i--) {
+                if (maintenanceRecords[i].vehicleId === id) {
+                    maintenanceRecords.splice(i, 1);
+                }
+            }
+
+            return true;
         }
     },
     Vehicle: {

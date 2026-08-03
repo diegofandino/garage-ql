@@ -15,7 +15,7 @@ export default function SiteHeader() {
           <Link className="transition-colors hover:text-orange-400" href="#vehicles">Vehicles</Link>
           <Link className="transition-colors hover:text-orange-400" href="#add-vehicle">Add Vehicle</Link>
           <Link className="transition-colors hover:text-orange-400" href="#maintenance">Log Maintenance</Link>
-          <Button asChild className="h-9 rounded-lg bg-orange-500 px-4 font-bold text-black hover:bg-orange-400">
+          <Button className="h-9 rounded-lg bg-orange-500 px-4 font-bold text-white hover:bg-orange-400">
             <Link href="#add-vehicle">+ New Vehicle</Link>
           </Button>
         </nav>

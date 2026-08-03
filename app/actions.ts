@@ -120,4 +120,78 @@ export async function createLogMaintanceById(_prevState: CreateGeneralMessage, f
     updateTag('get-cars');
     return { success: true, message: `Maintenance logged for ${data.createMaintenance.vehicle.nickname}` };
 
+};
+
+export async function deleteMaintenanceFromVehicle(_prevState: CreateGeneralMessage, id: string): Promise<CreateGeneralMessage> {
+
+    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            query: `mutation deleteMaintenance($id: ID!){
+                deleteMaintenance(id: $id)
+            }`,
+            variables: { id: id },
+        })
+    });
+
+
+    if (!response.ok) return {
+        success: false,
+        message: "Something went wrong deleting the car log maintenance, please try again."
+    }
+
+    const { data, errors } = await response.json();
+
+    if (errors) {
+        return { success: false, message: 'Something went wrong saving the vehicle maintenance.' };
+    }
+
+    if (!data.deleteMaintenance) {
+        return { success: false, message: 'Log was not found — it may already be deleted.' };
+    }
+
+    updateTag('get-cars');
+
+    return {
+        message: 'Maintenance log was deleted.',
+        success: true
+    }
+}
+
+export async function deleteVehicleFromDB(_prevState: CreateGeneralMessage, id: string): Promise<CreateGeneralMessage> {
+
+
+    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            query: `mutation deleteVehicle($id: ID!){
+                deleteVehicle(id: $id)
+                }`,
+            variables: { id: id },
+        })
+    });
+
+    if (!response.ok) return {
+        success: false,
+        message: "Something went wrong deleting the car, please try again."
+    }
+
+    const { data, errors } = await response.json();
+
+    if (errors) {
+        return { success: false, message: 'Something went wrong removing the vehicle.' };
+    }
+
+    if (!data.deleteVehicle) {
+        return { success: false, message: 'Vehicle was not found — it may already be deleted.' };
+    }
+
+    updateTag('get-cars');
+
+    return {
+        message: 'Vehicle was deleted.',
+        success: true
+    }
 }
