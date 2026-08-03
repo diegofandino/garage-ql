@@ -13,6 +13,16 @@ const initialValue: CreateGeneralMessage = {
     message: ''
 }
 
+const emptyForm = {
+    nickname: '',
+    make: '',
+    model: '',
+    year: '',
+    plate: '',
+};
+
+type VehicleFormValues = typeof emptyForm;
+
 export default function CreateVehicleSection() {
 
     const [state, formAction, isPending] = useActionState(createVehicle, initialValue);
@@ -22,6 +32,13 @@ export default function CreateVehicleSection() {
         setDirtyFields((prev) => new Set(prev).add(field));
     const errorFor = (field: string) =>
         dirtyFields.has(field) ? undefined : state.errors?.[field];
+
+    const [formValues, setFormValues] = useState<VehicleFormValues>(emptyForm);
+    const updateField = (field: keyof VehicleFormValues) =>
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            markDirty(field);
+            setFormValues((prev) => ({ ...prev, [field]: e.target.value }));
+        };
 
     useEffect(() => {
         if (state.success === false && state.errors) {
@@ -38,6 +55,7 @@ export default function CreateVehicleSection() {
                 description: state.message,
                 type: 'success',
             });
+            setFormValues(emptyForm);
         }
     }, [state]);
 
@@ -57,7 +75,7 @@ export default function CreateVehicleSection() {
                         <Label htmlFor="nickname" className="mb-2 block">
                             Nickname
                         </Label>
-                        <Input id="nickname" name="nickname" placeholder="e.g. The Beast" onChange={() => markDirty('nickname')} />
+                        <Input id="nickname" name="nickname" placeholder="e.g. The Beast" value={formValues.nickname} onChange={updateField('nickname')} />
                         <FieldError errors={errorFor('nickname')} />
                     </div>
 
@@ -66,14 +84,14 @@ export default function CreateVehicleSection() {
                             <Label htmlFor="make" className="mb-2 block">
                                 Make
                             </Label>
-                            <Input id="make" name="make" placeholder="e.g. Subaru" onChange={() => markDirty('make')} />
+                            <Input id="make" name="make" placeholder="e.g. Subaru" value={formValues.make} onChange={updateField('make')} />
                             <FieldError errors={errorFor('make')} />
                         </div>
                         <div>
                             <Label htmlFor="model" className="mb-2 block">
                                 Model
                             </Label>
-                            <Input id="model" name="model" placeholder="e.g. Outback" onChange={() => markDirty('model')} />
+                            <Input id="model" name="model" placeholder="e.g. Outback" value={formValues.model} onChange={updateField('model')} />
                             <FieldError errors={errorFor('model')} />
                         </div>
                     </div>
@@ -83,14 +101,14 @@ export default function CreateVehicleSection() {
                             <Label htmlFor="year" className="mb-2 block">
                                 Year
                             </Label>
-                            <Input id="year" name="year" type="number" placeholder="2022" onChange={() => markDirty('year')} />
+                            <Input id="year" name="year" type="number" placeholder="2022" value={formValues.year} onChange={updateField('year')} />
                             <FieldError errors={errorFor('year')} />
                         </div>
                         <div>
                             <Label htmlFor="plate" className="mb-2 block">
                                 License plate
                             </Label>
-                            <Input style={{ textTransform: "uppercase" }} id="plate" name="plate" placeholder="ABC 1234" onChange={() => markDirty('plate')} />
+                            <Input style={{ textTransform: "uppercase" }} id="plate" name="plate" placeholder="ABC 1234" value={formValues.plate} onChange={updateField('plate')} />
                             <FieldError errors={errorFor('plate')} />
                         </div>
                     </div>

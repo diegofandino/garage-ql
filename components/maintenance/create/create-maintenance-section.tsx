@@ -19,6 +19,15 @@ const initialValue: CreateGeneralMessage = {
   message: ''
 }
 
+const emptyForm = {
+  vehicleId: '',
+  type: '',
+  date: '',
+  mileage: '',
+  notes: '',
+};
+
+type MaintenanceFormValues = typeof emptyForm;
 
 export default function CreateMaintenanceSection({
   vehicles,
@@ -31,6 +40,12 @@ export default function CreateMaintenanceSection({
   const errorFor = (field: string) =>
     dirtyFields.has(field) ? undefined : state.errors?.[field];
 
+  const [formValues, setFormValues] = useState<MaintenanceFormValues>(emptyForm);
+  const updateField = (field: keyof MaintenanceFormValues) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      markDirty(field);
+      setFormValues((prev) => ({ ...prev, [field]: e.target.value }));
+    };
 
   useEffect(() => {
     if (!state.success) {
@@ -46,6 +61,7 @@ export default function CreateMaintenanceSection({
         description: state.message,
         type: 'success',
       });
+      setFormValues(emptyForm);
     }
   }, [state])
 
@@ -63,8 +79,8 @@ export default function CreateMaintenanceSection({
               <select
                 id="vehicle"
                 name="vehicleId"
-                defaultValue=""
-                onChange={() => markDirty('vehicleId')}
+                value={formValues.vehicleId}
+                onChange={updateField('vehicleId')}
                 className="h-9 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <option value="" disabled>
@@ -87,8 +103,8 @@ export default function CreateMaintenanceSection({
                 <select
                   id="type"
                   name="type"
-                  defaultValue=""
-                  onChange={() => markDirty('type')}
+                  value={formValues.type}
+                  onChange={updateField('type')}
                   className="h-9 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <option value="" disabled>
@@ -107,7 +123,7 @@ export default function CreateMaintenanceSection({
                 <Label htmlFor="date" className="mb-2 block">
                   Date
                 </Label>
-                <Input id="date" name="date" type="date" onChange={() => markDirty('date')} />
+                <Input id="date" name="date" type="date" value={formValues.date} onChange={updateField('date')} />
                 <FieldError errors={errorFor('date')} />
               </div>
             </div>
@@ -116,7 +132,7 @@ export default function CreateMaintenanceSection({
               <Label htmlFor="mileage" className="mb-2 block">
                 Mileage at service
               </Label>
-              <Input id="mileage" name="mileage" type="number" placeholder="e.g. 68,400" onChange={() => markDirty('mileage')} />
+              <Input id="mileage" name="mileage" type="number" placeholder="e.g. 68,400" value={formValues.mileage} onChange={updateField('mileage')} />
               <FieldError errors={errorFor('mileage')} />
             </div>
 
@@ -129,7 +145,8 @@ export default function CreateMaintenanceSection({
                 name="notes"
                 rows={3}
                 placeholder="Anything worth remembering — parts used, shop name, next steps..."
-                onChange={() => markDirty('notes')}
+                value={formValues.notes}
+                onChange={updateField('notes')}
                 className="w-full resize-none min-h-[100px] rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
               <FieldError errors={errorFor('notes')} />
