@@ -1,6 +1,7 @@
 'use server';
 import { updateTag } from "next/cache";
-import z, { date } from "zod";
+import z from "zod";
+import { getGraphQLUrl } from "@/lib/api-url";
 
 export interface CreateGeneralMessage {
     success: boolean;
@@ -46,7 +47,7 @@ export async function createVehicle(_prevState: CreateGeneralMessage, formData: 
         plate: result.data.plate,
     }
 
-    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+    const response = await fetch(getGraphQLUrl(), {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({
@@ -89,7 +90,7 @@ export async function createLogMaintanceById(_prevState: CreateGeneralMessage, f
         notes: result.data.notes
     };
 
-    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+    const response = await fetch(getGraphQLUrl(), {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -124,7 +125,7 @@ export async function createLogMaintanceById(_prevState: CreateGeneralMessage, f
 
 export async function deleteMaintenanceFromVehicle(_prevState: CreateGeneralMessage, id: string): Promise<CreateGeneralMessage> {
 
-    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+    const response = await fetch(getGraphQLUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -162,7 +163,7 @@ export async function deleteMaintenanceFromVehicle(_prevState: CreateGeneralMess
 export async function deleteVehicleFromDB(_prevState: CreateGeneralMessage, id: string): Promise<CreateGeneralMessage> {
 
 
-    const response = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+    const response = await fetch(getGraphQLUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

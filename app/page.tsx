@@ -3,13 +3,14 @@ import CreateVehicleSection from "@/components/vehicle/create/create-vehicle-sec
 import CreateMaintenanceSection from "@/components/maintenance/create/create-maintenance-section";
 import type { Vehicle as BaseVehicle } from '@/lib/data'
 import { CardVehicleComponent } from "@/components/vehicle/cards/cards-vehicle";
+import { getGraphQLUrl } from "@/lib/api-url";
 
 export type Vehicle = BaseVehicle & {
   records: { id: string, type: string, mileage: string, date: string, notes: string | null }[];
 };
 
 async function getVehicles() {
-  const res = await fetch(`${process.env.BASE_API_URL}${process.env.GRAPH_QL_ENDPOINT}`, {
+  const res = await fetch(getGraphQLUrl(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
