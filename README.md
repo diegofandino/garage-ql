@@ -56,8 +56,7 @@ Run the dev server:
 pnpm dev
 ```
 
-- App: [http://localhost:3000](http://localhost:3000)
-- Vehicles page: [http://localhost:3000/vehicles](http://localhost:3000/vehicles)
+- Pure App: [http://localhost:3000](http://localhost:3000)
 
 ## GraphQL API
 
