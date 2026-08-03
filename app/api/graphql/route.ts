@@ -67,6 +67,13 @@ const resolvers = {
             mileage,
             notes
         }: MaintenanceRecord) => {
+            if (!vehicles.some(vehicle => vehicle.id === vehicleId)) {
+                throw new GraphQLError(
+                    `No vehicle found with id "${vehicleId}".`,
+                    { extensions: { code: 'BAD_USER_INPUT' } }
+                );
+            }
+
             if (Number.isNaN(new Date(date).getTime())) {
                 throw new GraphQLError(
                     `"${date}" is not a valid date.`,

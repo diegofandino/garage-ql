@@ -84,7 +84,7 @@ export async function createLogMaintanceById(_prevState: CreateGeneralMessage, f
     const objectToSend = {
         vehicleId: result.data.vehicleId,
         type: result.data.type,
-        date: Number(result.data.date),
+        date: result.data.date,
         mileage: result.data.mileage,
         notes: result.data.notes
     };
