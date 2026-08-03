@@ -3,8 +3,6 @@ import { createSchema, createYoga } from 'graphql-yoga';
 import { GraphQLError } from 'graphql';
 import { randomUUID } from 'crypto'
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const typeDefs = `
     type Vehicle {
         id: ID!,
@@ -132,8 +130,7 @@ const resolvers = {
 const { handleRequest } = createYoga({
     schema: createSchema({ typeDefs, resolvers }),
     graphqlEndpoint: '/api/graphql',
-    fetchAPI: { Response },
-    graphiql: !isProduction && true
+    fetchAPI: { Response }
 });
 
 export async function GET(request: Request): Promise<Response> {
