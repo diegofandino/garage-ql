@@ -11,11 +11,25 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-
-
 export const metadata: Metadata = {
   title: "GarageQL",
-  description: "Application for manage your dummie garage wiht grahpql",
+  description: "GarageQL is a project building for manage your cars inside your garage.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  icons: {
+    icon: "/icon.svg",
+  },
+  openGraph: {
+    title: "GarageQL",
+    description: "Keep your vehicles and maintenance records in good shape.",
+    type: "website",
+    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "GarageQL — vehicle maintenance tracker" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GarageQL",
+    description: "Keep your vehicles and maintenance records in good shape.",
+    images: ["/og-image.svg"],
+  },
 };
 
 export default function RootLayout({
